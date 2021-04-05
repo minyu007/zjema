@@ -118,26 +118,46 @@ const scrape = async () => {
     const elem = document.querySelector('#totalPageNoSpan');
     if (elem && elem.innerText) {
       return parseInt(elem.innerText);
-    } else 0;
+    } else {
+      return 0;
+    }
   });
 
   const year = await frame.evaluate(() => {
     const elem = document.querySelector('#jcsjnf');
     if (elem && elem.value) {
       return parseInt(elem.value);
-    } else 0;
+    } else {
+      return 0;
+    }
   });
   const quarterly = await frame.evaluate(() => {
     const elem = document.querySelector('#jcsjgdsj');
     if (elem && elem.value) {
       return elem.value;
-    } else 0;
+    } else {
+      return 0;
+    }
   });
   log(`---- ${totalPageNo} ${year} ${quarterly} start----`);
-  for (let i = 50; i <= totalPageNo; i++) {
-    // let timer1 = getRandom(1000 * 15, 30 * 1000);
-    // log(`sleep ${timer1 / 1000} seconds! scraping page ${i}`);
-    // await sleep(timer1);
+  for (let i = 118; i <= totalPageNo; i++) {
+    const yzmcode = await frame.evaluate(() => {
+      const elem = document.querySelector('#yzmcode');
+      if (elem && elem.value && elem.value.length == 4) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    if (!yzmcode) {
+      log('------ yzmcode is changed!!!!!!!!  -----');
+      await frame.waitForFunction(() => {
+        const yzmcode = document.querySelector('#yzmcode').value;
+        return yzmcode.length === 4;
+      });
+      log('yzmcode is ok now!!! continue!!!');
+    }
+
     const pageData = await frame.evaluate(() => {
       return Array.from(document.querySelectorAll('#bgjl tr')).map((v) =>
         Array.from(v.querySelectorAll('td')).map((vv) => vv.innerText)
