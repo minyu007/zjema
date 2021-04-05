@@ -140,25 +140,7 @@ const scrape = async () => {
     }
   });
   log(`---- ${totalPageNo} ${year} ${quarterly} start----`);
-  for (let i = 122; i <= totalPageNo; i++) {
-    const yzmcode = await frame.evaluate(() => {
-      const elem = document.querySelector('#yzmcode');
-      if (elem && elem.value && elem.value.length == 4) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    if (!yzmcode) {
-      log('------ yzmcode is changed!!!!!!!!  -----');
-      await frame.waitForFunction(() => {
-        const yzmcode = document.querySelector('#yzmcode').value;
-        return yzmcode.length === 4;
-      });
-      await sleep(10 * 1000);
-      log('yzmcode is ok now!!! continue!!!');
-    }
-
+  for (let i = 147; i <= totalPageNo; i++) {
     const pageData = await frame.evaluate(() => {
       return Array.from(document.querySelectorAll('#bgjl tr')).map((v) =>
         Array.from(v.querySelectorAll('td')).map((vv) => vv.innerText)
@@ -200,11 +182,31 @@ const scrape = async () => {
         `${item[1]} - ${item[2]} - ${item[3]} - ${item[4]} - ${item[5]} - ${item[6]} - ${item[7]}`
       );
     }
-    await frame.click('#page3');
     let timer = getRandom(1000 * 15, 20 * 1000);
-    log(`page ${i} scraped, sleep ${timer / 1000} seconds!`);
-    log(`go to page ${i + 1}`);
+    log(`page ${i} scraped, go to page ${i + 1}`);
+    await frame.click('#page3');
+    log(`sleep ${timer / 1000} seconds!`);
     await sleep(timer);
+
+    const yzmcode = await frame.evaluate(() => {
+      const elem = document.querySelector('#yzmcode');
+      if (elem && elem.value && elem.value.length == 4) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    if (!yzmcode) {
+      log('------ yzmcode is changed!!!!!!!!  -----');
+      await frame.waitForFunction(() => {
+        const yzmcode = document.querySelector('#yzmcode').value;
+        return yzmcode.length === 4;
+      });
+      await sleep(10 * 1000);
+      await frame.click('table.fenye-tab>tbody>tr>td:nth-child(10) a');
+      await sleep(10 * 1000);
+      log('yzmcode is ok now!!! continue!!!');
+    }
   }
 
   browser.close();
