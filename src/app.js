@@ -140,7 +140,7 @@ const scrape = async () => {
     }
   });
   log(`---- ${totalPageNo} ${year} ${quarterly} start----`);
-  for (let i = 118; i <= totalPageNo; i++) {
+  for (let i = 122; i <= totalPageNo; i++) {
     const yzmcode = await frame.evaluate(() => {
       const elem = document.querySelector('#yzmcode');
       if (elem && elem.value && elem.value.length == 4) {
@@ -155,6 +155,7 @@ const scrape = async () => {
         const yzmcode = document.querySelector('#yzmcode').value;
         return yzmcode.length === 4;
       });
+      await sleep(10 * 1000);
       log('yzmcode is ok now!!! continue!!!');
     }
 
