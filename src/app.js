@@ -134,7 +134,7 @@ const scrape = async () => {
     } else 0;
   });
   log(`---- ${totalPageNo} ${year} ${quarterly} start----`);
-  for (let i = 1; i <= totalPageNo; i++) {
+  for (let i = 50; i <= totalPageNo; i++) {
     // let timer1 = getRandom(1000 * 15, 30 * 1000);
     // log(`sleep ${timer1 / 1000} seconds! scraping page ${i}`);
     // await sleep(timer1);
@@ -182,8 +182,8 @@ const scrape = async () => {
     await frame.click('#page3');
     let timer = getRandom(1000 * 15, 20 * 1000);
     log(`page ${i} scraped, sleep ${timer / 1000} seconds!`);
-    await sleep(timer);
     log(`go to page ${i + 1}`);
+    await sleep(timer);
   }
 
   browser.close();
