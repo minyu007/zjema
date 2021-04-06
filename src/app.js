@@ -8,7 +8,7 @@ const cron = require('node-cron');
 const moment = require('moment');
 const service = require('./service');
 
-const wait = 1000 * 60 * 5;
+const wait = 1000 * 60 * 30;
 
 const sleep = (ms) => {
   return new Promise(function (resolve) {
@@ -104,10 +104,15 @@ const scrape = async () => {
   const elementHandle = await page.$('#mainFrame');
   const frame = await elementHandle.contentFrame();
 
-  await frame.waitForFunction(() => {
-    const yzmcode = document.querySelector('#yzmcode').value;
-    return yzmcode.length === 4;
-  });
+  await frame.waitForFunction(
+    () => {
+      const yzmcode = document.querySelector('#yzmcode').value;
+      return yzmcode.length === 4;
+    },
+    {
+      timeout: wait,
+    }
+  );
   log('step 2: input yzmcode');
 
   await sleep(10 * 1000);
@@ -140,7 +145,7 @@ const scrape = async () => {
     }
   });
   log(`---- ${totalPageNo} ${year} ${quarterly} start----`);
-  for (let i = 147; i <= totalPageNo; i++) {
+  for (let i = 187; i <= totalPageNo; i++) {
     const pageData = await frame.evaluate(() => {
       return Array.from(document.querySelectorAll('#bgjl tr')).map((v) =>
         Array.from(v.querySelectorAll('td')).map((vv) => vv.innerText)
@@ -182,8 +187,8 @@ const scrape = async () => {
         `${item[1]} - ${item[2]} - ${item[3]} - ${item[4]} - ${item[5]} - ${item[6]} - ${item[7]}`
       );
     }
-    let timer = getRandom(1000 * 15, 20 * 1000);
-    log(`page ${i} scraped, go to page ${i + 1}`);
+    let timer = getRandom(1000 * 6, 9 * 1000);
+    log(`page ${i}/${totalPageNo} scraped, go to page ${i + 1}/${totalPageNo}`);
     await frame.click('#page3');
     log(`sleep ${timer / 1000} seconds!`);
     await sleep(timer);
@@ -198,10 +203,15 @@ const scrape = async () => {
     });
     if (!yzmcode) {
       log('------ yzmcode is changed!!!!!!!!  -----');
-      await frame.waitForFunction(() => {
-        const yzmcode = document.querySelector('#yzmcode').value;
-        return yzmcode.length === 4;
-      });
+      await frame.waitForFunction(
+        () => {
+          const yzmcode = document.querySelector('#yzmcode').value;
+          return yzmcode.length === 4;
+        },
+        {
+          timeout: wait,
+        }
+      );
       await sleep(10 * 1000);
       await frame.click('table.fenye-tab>tbody>tr>td:nth-child(10) a');
       await sleep(10 * 1000);
