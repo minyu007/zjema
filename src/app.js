@@ -97,7 +97,7 @@ const scrape = async () => {
     }
   );
   log('you have 30s to prepare...');
-  await sleep(30 * 1000);
+  await sleep(60 * 1000);
   log('step 1: sleep 30s');
 
   await page.waitForSelector('#mainFrame');
@@ -145,7 +145,7 @@ const scrape = async () => {
     }
   });
   log(`---- ${totalPageNo} ${year} ${quarterly} start----`);
-  for (let i = 187; i <= totalPageNo; i++) {
+  for (let i = 598; i <= totalPageNo; i++) {
     const pageData = await frame.evaluate(() => {
       return Array.from(document.querySelectorAll('#bgjl tr')).map((v) =>
         Array.from(v.querySelectorAll('td')).map((vv) => vv.innerText)
