@@ -91,7 +91,7 @@ const scrape = async () => {
   });
 
   page.goto(
-    'http://223.4.64.201:8080/eap/hb/cxfx/jcsjcx/dtcx/qyxx.jsp?id=247112131330254&sheng=330000&model=1',
+    'http://223.4.64.201:8080/eap/hb/cxfx/jcsjcx/dtcx/qyxx.jsp?id=B74E6D72ADFC4C49938CD3D2797CA8C1&sheng=330000&model=1',
     {
       timeout: wait,
     }
@@ -145,7 +145,7 @@ const scrape = async () => {
     }
   });
   log(`---- ${totalPageNo} ${year} ${quarterly} start----`);
-  for (let i = 598; i <= totalPageNo; i++) {
+  for (let i = 1; i <= totalPageNo; i++) {
     const pageData = await frame.evaluate(() => {
       return Array.from(document.querySelectorAll('#bgjl tr')).map((v) =>
         Array.from(v.querySelectorAll('td')).map((vv) => vv.innerText)
